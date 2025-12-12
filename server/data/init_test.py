@@ -11,4 +11,4 @@ def create_test_data(num_users: int = 5, num_stocks: int = 3):
     for i in range(num_stocks):
         stock = Stock(name=f'Stock {i}', category='Test')
         stock.save(session)
-        StockEntry(stock_id=stock.uid, value=100.0).save(session)
+        StockEntry(stock_id=stock.uid, value=5000.0).save(session)
