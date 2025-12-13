@@ -1,5 +1,5 @@
 from fastapi import WebSocket
-from fastapi.websockets import WebSocketState
+import random
 
 class SocketPool:
     __conn: list[WebSocket]
@@ -12,6 +12,9 @@ class SocketPool:
 
     def remove(self, socket: WebSocket):
         self.__conn.remove(socket)
+
+    async def random_send(self, message: dict):
+        await random.choice(self.__conn).send_json(message)
 
     async def broadcast(self, message: dict):
         for socket in self.__conn:

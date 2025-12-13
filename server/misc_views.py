@@ -27,8 +27,8 @@ def get_leaderboard(session: db.sql.Session = Depends(db.get_session)):
 
 
 from data.socket_pool import SocketPool
-import asyncio
-from typing import Dict
+import asyncio, random
+from typing import Dict, Any
 NEWS_POOL = SocketPool()
 
 @router.websocket('/news/')
@@ -45,8 +45,11 @@ async def connect_websocket(websocket: WebSocket):
 
 @router.post('/news/')
 def broadcast_news(
-    data: Dict[str, str],
+    data: Dict[str, Any],
     _: None = Depends(middleware.check_admin),
 ):
-    asyncio.run(NEWS_POOL.broadcast(data))
+    if data.get("random", False):
+        asyncio.run(NEWS_POOL.random_send(data))
+    else:
+        asyncio.run(NEWS_POOL.broadcast(data))
     return {"detail": "News broadcasted"}
